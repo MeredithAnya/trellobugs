@@ -1,4 +1,5 @@
 import sentry_sdk
+import os
 from flask import Flask
 from sentry_sdk.integrations.flask import FlaskIntegration
 
