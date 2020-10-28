@@ -20,3 +20,7 @@ app = Flask(__name__)
 def bugs():
     somthing()
     return 'bleep bloop'
+
+
+if __name__ == '__main__':
+    app.run()
