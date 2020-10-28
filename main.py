@@ -20,7 +20,8 @@ app.config.from_object(os.environ['APP_SETTINGS'])
 
 @app.route('/')
 def bugs():
-    somthing()
+    name = "meredith"
+    somthing(name)
     return 'bleep bloop'
 
 
