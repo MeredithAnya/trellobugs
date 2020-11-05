@@ -35,6 +35,7 @@ def main():
             # look up external issue and get trello card id
             external_issue = SentryClient().get_external_issue(issue["id"])
             if external_issue:
+                # e.g `SentryBugs#1827982374273`
                 card_id = external_issue["displayName"].split("#")[1]
                 TrelloClient().resolve_card(card_id)
                 return Response(status=200)
