@@ -1,1 +1,4 @@
 .venv
+.envrc
+.sentryclirc
+__pycache__
