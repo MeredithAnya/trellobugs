@@ -104,7 +104,7 @@ class SentryClient(object):
         url = u"https://sentry.io/api/0/organizations/meredith/issues/{}/external-issues/".format(issue_id)
         resp = requests.get(url, headers=headers)
         resp.raise_for_status()
-        return resp.json()
+        return resp.json()[0]
 
 
     def link_issue(self, card, event):

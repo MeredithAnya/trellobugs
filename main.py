@@ -27,8 +27,10 @@ def main():
 
     if request.method == "POST":
         # check the webhook event type 
-        resource = request.headers.get("Sentry-Hook-Resource") 
-        if resource == "issue":
+        resource = request.headers.get("Sentry-Hook-Resource")
+        action = request.json["action"]
+
+        if resource == "issue" and action == "resolved":
             issue = request.json["data"]["issue"]
             # look up external issue and get trello card id
             external_issue = SentryClient().get_external_issue(issue["id"])
@@ -43,12 +45,14 @@ def main():
             event = request.json["data"]["event"]
             name = event["title"]
             url = event["web_url"]
-            desc = "Sentry Event: [Take me der]({})".format(url)
+            desc = u"Sentry Event: [Take me der]({})".format(url)
 
             card = TrelloClient().create_card({"name": name, "desc": desc})
 
             SentryClient().link_issue(card, event)
             return Response(status=201)
+
+    return Response(status=200)
 
 @app.route('/cards/create', methods=['POST'])
 def create_card():
@@ -105,7 +109,7 @@ def boards():
 @app.route('/bugs', methods=['GET'])
 def bugs():
     try:
-        wqokayyq()
+        whooops()
     except Exception as e:
         with push_scope() as scope:
             scope.set_tag("plan", "enterprise")
