@@ -110,7 +110,7 @@ def boards():
 @app.route('/bugs', methods=['GET'])
 def bugs():
     try:
-        whooops()
+        oopaloop()
     except Exception as e:
         with push_scope() as scope:
             scope.set_tag("plan", "enterprise")

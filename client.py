@@ -1,5 +1,6 @@
 import requests 
 import json
+import os
 
 # installation uuid, not sentry app uuid
 INSTALL_UUID = "a3af8751-8030-48db-b22d-43b16ebee531"
@@ -53,8 +54,8 @@ class TrelloClient(object):
     def request(self, method, path, data=None, params=None):
         headers = {"Content-Type": "application/json"}
         params = {} if params is None else params.copy()
-        params["token"] = "369d2bd6fc655b9f583b5a1b37917221583d616533fff620fa1380a536bcd29c"
-        params["key"] = "4f39b7a6f3d8174c8936d290ab4d5b7e"
+        params["token"] = os.environ["TRELLO_TOKEN"]
+        params["key"] = os.environ["TRELLO_KEY"]
 
         url = u"{}{}".format(self.base_url, path)
         if method == "GET":
@@ -98,7 +99,7 @@ class SentryClient(object):
             }
         ]
         """
-        sentry_token = "124055265b004bc9a870bddd310f3e576ddec29028304a33984e137368126b3c"
+        sentry_token = os.environ["SENTRY_AUTH_TOKEN"]
         headers = {"Content-Type": "application/json"}
         headers["Authorization"] = "Bearer {}".format(sentry_token)
         url = u"https://sentry.io/api/0/organizations/meredith/issues/{}/external-issues/".format(issue_id)
@@ -109,7 +110,7 @@ class SentryClient(object):
 
     def link_issue(self, card, event):
         issue_id = event["issue_url"].split("/")[-2]
-        sentry_token = "124055265b004bc9a870bddd310f3e576ddec29028304a33984e137368126b3c"
+        sentry_token = os.environ["SENTRY_AUTH_TOKEN"]
         headers = {"Content-Type": "application/json"}
         headers["Authorization"] = "Bearer {}".format(sentry_token)
         url = u"https://sentry.io/api/0/sentry-app-installations/{}/external-issues/".format(INSTALL_UUID)
