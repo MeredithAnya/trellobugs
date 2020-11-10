@@ -1,13 +1,13 @@
 import os
 import sentry_sdk
 
-from flask import Flask, json, request, Response
+from flask import Flask, json, request, Response, render_template
 
 from sentry_sdk.integrations.flask import FlaskIntegration
 from sentry_sdk import push_scope, capture_exception
 
 from client import TrelloClient, SentryClient
-from utils import get_release_sha
+from utils import get_release_sha, get_plan_label
 
 sentry_sdk.init(
     dsn="https://4c0b4d78a85e4531a128a4730cd4c70b@o49697.ingest.sentry.io/4511291",
@@ -46,9 +46,11 @@ def main():
             event = request.json["data"]["event"]
             name = event["title"]
             url = event["web_url"]
-            desc = u"Sentry Event: [Take me der]({})".format(url)
+            desc = u"Sentry Event: [Go There]({})".format(url)
 
-            card = TrelloClient().create_card({"name": name, "desc": desc})
+            # if tag plan:enterprise, set label to enterprise
+            label = get_plan_label(event)
+            card = TrelloClient().create_card({"name": name, "desc": desc, "label": label})
 
             SentryClient().link_issue(card, event)
             return Response(status=201)
@@ -110,13 +112,12 @@ def boards():
 @app.route('/bugs', methods=['GET'])
 def bugs():
     try:
-        oopaloop()
+        onno()
     except Exception as e:
         with push_scope() as scope:
             scope.set_tag("plan", "enterprise")
             capture_exception(e)
             return "OOPS"
-
 
 if __name__ == '__main__':
     app.run()

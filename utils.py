@@ -12,3 +12,13 @@ def get_release_sha():
         # binary didn't exist, wasn't on path, etc
         return None
     return revision.strip()
+
+def get_plan_label(event):
+    label = None
+    for tag in event["tags"]:
+        key, value = tag
+        if key == "plan":
+            label = value
+            break
+
+    return label

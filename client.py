@@ -8,6 +8,7 @@ INSTALL_UUID = "a3af8751-8030-48db-b22d-43b16ebee531"
 ORG_BOARD_PATH = "/organizations/%s/boards"
 MEMBER_ORG_PATH = "/members/me/organizations"
 LISTS_OF_BOARD_PATH = "/boards/%s/lists"
+LABELS_OF_BOARD_PATH = "/boards/%s/labels"
 NEW_CARD_PATH = "/cards"
 SINGLE_CARD_PATH = "/cards/%s"
 ADD_COMMENT_PATH = "/cards/%s/actions/comments"
@@ -74,11 +75,18 @@ class TrelloClient(object):
         # fields = "name,url"
         return self.request("GET", MEMBER_BOARD_PATH)
     
+    def get_labels(self):
+        return self.request("GET", LABELS_OF_BOARD_PATH % BOARD_ID)
+    
     def get_list_of_board(self):
         return self.request("GET", LISTS_OF_BOARD_PATH % BOARD_ID)
 
     def create_card(self, data):
         data["idList"] = "5f9c470e572ea3086b7dfe36"
+        if data.get("label"):
+            # enterprise label id
+            data["idLabels"] = ["5fa48581d6886460ade1b680"]
+            del data["label"]
         return self.request("POST", NEW_CARD_PATH, data=json.dumps(data))
     
     def resolve_card(self, card_id):
